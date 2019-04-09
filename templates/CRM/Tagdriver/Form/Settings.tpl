@@ -1,27 +1,53 @@
-{* HEADER *}
-
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="top"}
+<div id="help">
+  <p>Help goes here.</p>
 </div>
 
-{* FIELD EXAMPLE: OPTION 1 (AUTOMATIC LAYOUT) *}
+<div class="crm-block crm-form-block">
 
-{foreach from=$elementNames item=elementName}
-  <div class="crm-section">
-    <div class="label">{$form.$elementName.label}</div>
-    <div class="content">{$form.$elementName.html}</div>
-    <div class="clear"></div>
-  </div>
-{/foreach}
-
-{* FIELD EXAMPLE: OPTION 2 (MANUAL LAYOUT)
-
-  <div>
-    <span>{$form.favorite_color.label}</span>
-    <span>{$form.favorite_color.html}</span>
+  <div class="crm-submit-buttons">
+    {include file="CRM/common/formButtons.tpl" location="top"}
   </div>
 
-{* FOOTER *}
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
+  <table class="form-layout">
+    <tr>
+      <td class="label">{$form.tagdriver_x.label}</td>
+      <td>
+        {$form.tagdriver_x.html}
+        <div class="description">Contacts with the selected tag will automatically have a user account created for them.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">{$form.tagdriver_tb.label}</td>
+      <td>
+        {$form.tagdriver_tb.html}
+        <div class="description">If multiple contacts with the same email address are tagged for automatic user account creation, the one with this tag wins.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">{$form.tagdriver_z.label}</td>
+      <td>
+        {$form.tagdriver_z.html}
+        <div class="description">After a user account is automatically created, the contact will receive this tag.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">{$form.tagdriver_y.label}</td>
+      <td>
+        {$form.tagdriver_y.html}
+        <div class="description">Assign this tag to a contact to have a password reset link sent to them.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">{$form.tagdriver_pattern.label}</td>
+      <td>
+        {$form.tagdriver_pattern.html}
+        <div class="description">Pattern for username selection. All contact tokens are supported.</div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="crm-submit-buttons">
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
+  </div>
+
 </div>

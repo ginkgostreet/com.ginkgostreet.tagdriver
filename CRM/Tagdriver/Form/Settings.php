@@ -8,71 +8,57 @@ use CRM_Tagdriver_ExtensionUtil as E;
  * @see https://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
 class CRM_Tagdriver_Form_Settings extends CRM_Core_Form {
-  public function buildQuickForm() {
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      TRUE // is required
-    );
+  public function buildQuickForm() {
+    $tags = array('' => '--- select ---');
+    $api = civicrm_api3('Tag', 'get', array(
+      'sequential' => 1,
+      'is_selectable' => 1,
+      'is_tagset' => 0,
+      'used_for' => 'civicrm_contact',
+      'return' => 'id,name',
+    ));
+    foreach ($api['values'] as $tag) {
+      $tags[$tag['id']] = $tag['name'];
+    }
+
+    $this->add('select', 'tagdriver_x', 'Create users for', $tags);
+    $this->add('select', 'tagdriver_z', 'Tag created users with', $tags);
+    $this->add('select', 'tagdriver_y', 'Send password reminders to', $tags);
+    $this->add('select', 'tagdriver_tb', 'Process these first', $tags);
+
+    $this->add('text', 'tagdriver_pattern', 'Username pattern', array('size' => 60), TRUE);
+
     $this->addButtons(array(
       array(
         'type' => 'submit',
-        'name' => E::ts('Submit'),
+        'name' => E::ts('Save'),
         'isDefault' => TRUE,
       ),
     ));
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
+    $this->setDefaults(array(
+      'tagdriver_x' => Civi::settings()->get('tagdriver_x'),
+      'tagdriver_y' => Civi::settings()->get('tagdriver_y'),
+      'tagdriver_z' => Civi::settings()->get('tagdriver_z'),
+      'tagdriver_tb' => Civi::settings()->get('tagdriver_tb'),
+      'tagdriver_pattern' => Civi::settings()->get('tagdriver_pattern'),
+    ));
+
     parent::buildQuickForm();
   }
 
   public function postProcess() {
     $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
-    parent::postProcess();
-  }
 
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
-    }
-    return $options;
-  }
-
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
+    foreach ($values as $k => $v) {
+      if (strpos($k, 'tagdriver_') === 0) {
+        Civi::settings()->set($k, $v);
       }
     }
-    return $elementNames;
-  }
 
+    CRM_Core_Session::setStatus('The settings have been saved.', 'Success', 'success');
+
+    parent::postProcess();
+  }
 }
