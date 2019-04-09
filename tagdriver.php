@@ -4,6 +4,40 @@ require_once 'tagdriver.civix.php';
 use CRM_Tagdriver_ExtensionUtil as E;
 
 /**
+ * implements hook_civicrm_tokens().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tokens/
+ */
+function tagdriver_civicrm_tokens(&$tokens) {
+
+  $tokens['contact'] = array(
+    'contact.first_initial' => ts('Contact First Initial'),
+    'contact.last_initial' => ts('Contact Last Initial'),
+  );
+}
+
+/**
+ * implements hook_civicrm_tokenValues().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tokenValues/
+ */
+function tagdriver_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
+
+  if (!empty($tokens['contact']['first_initial']) || !empty($tokens['contact']['last_initial'])) {
+    $contacts = implode(',', $cids);
+
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, SUBSTRING(first_name, 1, 1) AS first_initial, SUBSTRING(last_name, 1, 1) AS last_initial
+      FROM civicrm_contact
+      WHERE id IN ($contacts)
+    ");
+    while ($dao->fetch()) {
+      $values[$dao->id]['contact.first_initial'] = $dao->first_initial;
+      $values[$dao->id]['contact.last_initial'] = $dao->last_initial;
+    }
+  }
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
