@@ -936,4 +936,14 @@ abstract class CRM_Utils_System_Base {
     throw new Exception('CMS user creation not supported for this framework');
     return array();
   }
+
+
+  /**
+   * Send a password reset email to the user
+   *
+   * @param int $ufID
+   * @return void
+   */
+  public function sendPasswordReset($ufID) {
+  }
 }
