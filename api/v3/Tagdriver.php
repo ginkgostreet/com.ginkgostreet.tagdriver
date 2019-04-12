@@ -85,11 +85,16 @@ function civicrm_api3_tagdriver_execute($params) {
       }
 
       if (empty($api['is_error'])) {
-        civicrm_api3('EntityTag', 'create', array(
-          'entity_table' => 'civicrm_contact',
-          'entity_id' => $createParams['contactID'],
-          'tag_id' => $tags['tagdriver_z'],
-        ));
+        try {
+          civicrm_api3('EntityTag', 'create', array(
+            'entity_table' => 'civicrm_contact',
+            'entity_id' => $createParams['contactID'],
+            'tag_id' => $tags['tagdriver_z'],
+          ));
+        }
+        catch (CiviCRM_API3_Exception $e) {
+          // tag z already set
+        }
         civicrm_api3('Activity', 'create', array(
           'source_record_id' => $createParams['contactID'],
           'target_contact_id' => $createParams['contactID'],
