@@ -65,7 +65,7 @@ function tagdriver_civicrm_tokens(&$tokens) {
  */
 function tagdriver_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
 
-  if (!empty($tokens['contact']['first_initial']) || !empty($tokens['contact']['last_initial'])) {
+  if (!empty($tokens['contact'])) {
     $contacts = implode(',', $cids);
 
     $dao = CRM_Core_DAO::executeQuery("SELECT id, SUBSTRING(first_name, 1, 1) AS first_initial, SUBSTRING(last_name, 1, 1) AS last_initial
