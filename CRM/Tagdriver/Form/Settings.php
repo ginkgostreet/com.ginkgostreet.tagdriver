@@ -22,11 +22,7 @@ class CRM_Tagdriver_Form_Settings extends CRM_Core_Form {
       $tags[$tag['id']] = $tag['name'];
     }
 
-    $this->add('select', 'tagdriver_x', 'Create users for', $tags);
-    $this->add('select', 'tagdriver_z', 'Tag created users with', $tags);
-    $this->add('select', 'tagdriver_y', 'Send password reminders to', $tags);
     $this->add('select', 'tagdriver_tb', 'Process these first', $tags);
-
     $this->add('text', 'tagdriver_pattern', 'Username pattern', array('size' => 60), TRUE);
 
     $this->addButtons(array(
@@ -38,9 +34,6 @@ class CRM_Tagdriver_Form_Settings extends CRM_Core_Form {
     ));
 
     $this->setDefaults(array(
-      'tagdriver_x' => Civi::settings()->get('tagdriver_x'),
-      'tagdriver_y' => Civi::settings()->get('tagdriver_y'),
-      'tagdriver_z' => Civi::settings()->get('tagdriver_z'),
       'tagdriver_tb' => Civi::settings()->get('tagdriver_tb'),
       'tagdriver_pattern' => Civi::settings()->get('tagdriver_pattern'),
     ));
