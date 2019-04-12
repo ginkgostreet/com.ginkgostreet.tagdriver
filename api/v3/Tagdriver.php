@@ -25,7 +25,7 @@ function civicrm_api3_tagdriver_execute($params) {
     }
   } while ($api['count'] > 0);
 
-  if ($tags['tagdriver_tb']) {
+  if ($tags['tagdriver_tb'] && count($do_last) > 0) {
     do {
       $api = civicrm_api3('EntityTag', 'get', array(
         'sequential' => 1,
@@ -118,6 +118,68 @@ function civicrm_api3_tagdriver_execute($params) {
     }
   }
 
+  // send password reset emails
+  $to_reset = array();
+  do {
+    $api = civicrm_api3('EntityTag', 'get', array(
+      'sequential' => 1,
+      'tag_id' => $tags['tagdriver_y'],
+      'options' => array(
+        'sort' => 'id ASC',
+        'offset' => count($to_reset),
+        'limit' => 25,
+      ),
+    ));
+    foreach ($api['values'] as $entity) {
+      $to_reset[] = $entity['entity_id'];
+    }
+  } while ($api['count'] > 0);
 
+  $config = CRM_Core_Config::singleton();
 
+  foreach ($to_reset as $contactID) {
+    try {
+      $uf_id = civicrm_api3('UFMatch', 'getvalue', array(
+        'contact_id' => $contactID,
+        'domain_id' => CRM_Core_Config::domainID(),
+        'return' => 'uf_id',
+      ));
+
+      if ($config->userSystem->is_drupal) {
+        require_once DRUPAL_ROOT . '/modules/user/user.pages.inc';
+
+        $user = user_load($uf_id);
+        $form_state = array(
+          'values' => array(
+            'account' => $user,
+          ),
+        );
+        user_pass_submit(NULL, $form_state);
+      }
+      civicrm_api3('Activity', 'create', array(
+        'source_record_id' => $contactID,
+        'target_contact_id' => $contactID,
+        'activity_type_id' => $activities['activity_password'],
+        'status_id' => $activities['activity_completed'],
+        'subject' => 'Sent',
+        'check_permissions' => 0,
+      ));
+    }
+    catch (CiviCRM_API3_Exception $e) {
+      civicrm_api3('Activity', 'create', array(
+        'source_record_id' => $contactID,
+        'target_contact_id' => $contactID,
+        'activity_type_id' => $activities['activity_password'],
+        'status_id' => $activities['activity_failed'],
+        'subject' => 'Failed',
+        'details' => $e->getMessage(),
+        'check_permissions' => 0,
+      ));
+    }
+    civicrm_api3('EntityTag', 'delete', array(
+      'entity_table' => 'civicrm_contact',
+      'entity_id' => $contactID,
+      'tag_id' => $tags['tagdriver_y'],
+    ));
+  }
 }
