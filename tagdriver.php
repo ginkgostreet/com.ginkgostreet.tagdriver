@@ -20,6 +20,11 @@ function _tagdriver_activities() {
       'name' => 'Failed',
       'return' => 'value',
     )),
+    'activity_completed' => civicrm_api3('OptionValue', 'getvalue', array(
+      'option_group_id' => 'activity_status',
+      'name' => 'Completed',
+      'return' => 'value',
+    )),
   );
 }
 
