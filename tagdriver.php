@@ -3,6 +3,43 @@
 require_once 'tagdriver.civix.php';
 use CRM_Tagdriver_ExtensionUtil as E;
 
+function _tagdriver_activities() {
+  return array(
+    'activity_creation' => civicrm_api3('OptionValue', 'getvalue', array(
+      'option_group_id' => 'activity_type',
+      'name' => 'User Account Creation',
+      'return' => 'value',
+    )),
+    'activity_password' => civicrm_api3('OptionValue', 'getvalue', array(
+      'option_group_id' => 'activity_type',
+      'name' => 'User Account Password Reset',
+      'return' => 'value',
+    )),
+    'activity_failed' => civicrm_api3('OptionValue', 'getvalue', array(
+      'option_group_id' => 'activity_status',
+      'name' => 'Failed',
+      'return' => 'value',
+    )),
+  );
+}
+
+function _tagdriver_tags() {
+  return array(
+    'tagdriver_x' => civicrm_api3('Tag', 'getvalue', array(
+      'name' => 'Tag Driver X',
+      'return' => 'id',
+    )),
+    'tagdriver_z' => civicrm_api3('Tag', 'getvalue', array(
+      'name' => 'Tag Driver Z',
+      'return' => 'id',
+    )),
+    'tagdriver_y' => civicrm_api3('Tag', 'getvalue', array(
+      'name' => 'Tag Driver Y',
+      'return' => 'id',
+    )),
+  );
+}
+
 /**
  * implements hook_civicrm_tokens().
  *
@@ -62,6 +99,22 @@ function tagdriver_civicrm_xmlMenu(&$files) {
  */
 function tagdriver_civicrm_install() {
   _tagdriver_civix_civicrm_install();
+
+  civicrm_api3('Tag', 'create', array(
+    'name' => 'Tag Driver X',
+    'description' => 'Contacts assigned this tag will have a CMS user account created for them automatically.',
+    'used_for' => 'civicrm_contact',
+  ));
+  civicrm_api3('Tag', 'create', array(
+    'name' => 'Tag Driver Z',
+    'description' => 'Contacts that have had a CMS user account created for them will have this tag assigned to them.',
+    'used_for' => 'civicrm_contact',
+  ));
+  civicrm_api3('Tag', 'create', array(
+    'name' => 'Tag Driver Y',
+    'description' => 'Contacts assigned this tag will have a password reset email sent to them automatically.',
+    'used_for' => 'civicrm_contact',
+  ));
 }
 
 /**
@@ -80,6 +133,13 @@ function tagdriver_civicrm_postInstall() {
  */
 function tagdriver_civicrm_uninstall() {
   _tagdriver_civix_civicrm_uninstall();
+
+  $tags = _tagdriver_tags();
+  foreach ($tags as $id) {
+    civicrm_api3('Tag', 'delete', array(
+      'id' => $id,
+    ));
+  }
 }
 
 /**
