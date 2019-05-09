@@ -3,6 +3,10 @@
 require_once 'tagdriver.civix.php';
 use CRM_Tagdriver_ExtensionUtil as E;
 
+define('TAG_DRIVER_X', 'Tag Driver: Create CMS Account');
+define('TAG_DRIVER_Z', 'Tag Driver: User Account');
+define('TAG_DRIVER_Y', 'Tag Driver: Reset CMS Password');
+
 function _tagdriver_activities() {
   return array(
     'activity_creation' => civicrm_api3('OptionValue', 'getvalue', array(
@@ -31,15 +35,15 @@ function _tagdriver_activities() {
 function _tagdriver_tags() {
   return array(
     'tagdriver_x' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => 'Tag Driver X',
+      'name' => TAG_DRIVER_X,
       'return' => 'id',
     )),
     'tagdriver_z' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => 'Tag Driver Z',
+      'name' => TAG_DRIVER_Z,
       'return' => 'id',
     )),
     'tagdriver_y' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => 'Tag Driver Y',
+      'name' => TAG_DRIVER_Y,
       'return' => 'id',
     )),
   );
@@ -106,17 +110,17 @@ function tagdriver_civicrm_install() {
   _tagdriver_civix_civicrm_install();
 
   civicrm_api3('Tag', 'create', array(
-    'name' => 'Tag Driver X',
+    'name' => TAG_DRIVER_X,
     'description' => 'Contacts assigned this tag will have a CMS user account created for them automatically.',
     'used_for' => 'civicrm_contact',
   ));
   civicrm_api3('Tag', 'create', array(
-    'name' => 'Tag Driver Z',
+    'name' => TAG_DRIVER_Z,
     'description' => 'Contacts that have had a CMS user account created for them will have this tag assigned to them.',
     'used_for' => 'civicrm_contact',
   ));
   civicrm_api3('Tag', 'create', array(
-    'name' => 'Tag Driver Y',
+    'name' => TAG_DRIVER_Y,
     'description' => 'Contacts assigned this tag will have a password reset email sent to them automatically.',
     'used_for' => 'civicrm_contact',
   ));
