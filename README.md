@@ -1,44 +1,25 @@
-# org.israelscouts.tagdriver
+# Tag Driver
 
 ![Screenshot](/images/screenshot.png)
 
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+## Usage
 
-The extension is licensed under [AGPL-3.0](LICENSE.txt).
+Tag Driver is a CiviCRM Utility for accomplishing tasks in bulk by adding a tag to one or more contact records. To use, search for a contact or a group of contacts, and add a Tag Driver tag to them. When the next Tag Driver job runs, the associated actions will be performed automagically. Actions that are currently supported are:
+
+* Create a CMS user account: Adding the "Tag Driver: Create CMS Account" tag to a contact record will create a CMS user account for that contact on the next run of the Tag Driver job. Note: Contacts that have had a CMS user account created for them by the Tag Driver extension will have the "Tag Driver: User Account" tag assigned to them.
+* Reset CMS Password: Adding the "Tag Driver: Reset CMS Password" will have a password reset email sent to the contact automatically on the next Tag Driver job run.
+
+Configure the extension by navigating to [https://www.example.org/civicrm/tagdriver](https://www.example.org/civicrm/tagdriver) and setting preferences for a tag that will be used to break ties if multiple contacts have the same email address, and the pattern to be used for creating CMS user account names.
 
 ## Requirements
 
 * PHP v5.4+
-* CiviCRM (*FIXME: Version number*)
+* CiviCRM v4.7+
 
-## Installation (Web UI)
+## Installation
 
-This extension has not yet been published for installation via the web UI.
+This extension has not yet been published for in-app installation. [General extension installation instructions](https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/#installing-a-new-extension) are available in the CiviCRM System Administrator Guide.
 
-## Installation (CLI, Zip)
+## License
 
-Sysadmins and developers may download the `.zip` file for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-cd <extension-dir>
-cv dl org.israelscouts.tagdriver@https://github.com/FIXME/org.israelscouts.tagdriver/archive/master.zip
-```
-
-## Installation (CLI, Git)
-
-Sysadmins and developers may clone the [Git](https://en.wikipedia.org/wiki/Git) repo for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-git clone https://github.com/FIXME/org.israelscouts.tagdriver.git
-cv en tagdriver
-```
-
-## Usage
-
-(* FIXME: Where would a new user navigate to get started? What changes would they see? *)
-
-## Known Issues
-
-(* FIXME *)
+The extension is licensed under [AGPL-3.0](LICENSE.txt).
