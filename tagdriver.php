@@ -173,7 +173,7 @@ function tagdriver_civicrm_uninstall() {
     'api_entity' => 'tagdriver',
     'return' => array('id'),
   ));
-  foreach ($jobs as $job) {
+  foreach ($jobs['values'] as $job) {
     civicrm_api3('Job', 'delete', array(
       'id' => $job['id'],
     ));
