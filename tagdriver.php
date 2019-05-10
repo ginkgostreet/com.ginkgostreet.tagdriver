@@ -124,6 +124,24 @@ function tagdriver_civicrm_install() {
     'description' => 'Contacts assigned this tag will have a password reset email sent to them automatically.',
     'used_for' => 'civicrm_contact',
   ));
+
+  $params = array(
+    'run_frequency' => 'Always',
+    'name' => 'Tag Driver',
+    'description' => 'Automatic CMS user account creation and password reset emails.',
+    'api_entity' => 'tagdriver',
+    'api_action' => 'execute',
+    'is_active' => 1,
+  );
+
+  $domains = civicrm_api3('Domain', 'get', array(
+    'sequential' => 1,
+    'return' => array('id'),
+  ));
+  foreach ($domain['values'] as $domain) {
+    $params['domain_id'] = $domain['id'];
+    civicrm_api3('Job', 'create', $params);
+  }
 }
 
 /**
@@ -147,6 +165,17 @@ function tagdriver_civicrm_uninstall() {
   foreach ($tags as $id) {
     civicrm_api3('Tag', 'delete', array(
       'id' => $id,
+    ));
+  }
+
+  $jobs = civicrm_api3('Job', 'get', array(
+    'sequential' => 1,
+    'api_entity' => 'tagdriver',
+    'return' => array('id'),
+  ));
+  foreach ($jobs as $job) {
+    civicrm_api3('Job', 'delete', array(
+      'id' => $job['id'],
     ));
   }
 }
