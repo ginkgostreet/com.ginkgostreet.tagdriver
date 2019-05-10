@@ -138,7 +138,7 @@ function tagdriver_civicrm_install() {
     'sequential' => 1,
     'return' => array('id'),
   ));
-  foreach ($domain['values'] as $domain) {
+  foreach ($domains['values'] as $domain) {
     $params['domain_id'] = $domain['id'];
     civicrm_api3('Job', 'create', $params);
   }
