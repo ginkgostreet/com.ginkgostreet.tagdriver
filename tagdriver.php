@@ -8,45 +8,55 @@ define('TAG_DRIVER_Z', 'Tag Driver: User Account');
 define('TAG_DRIVER_Y', 'Tag Driver: Reset CMS Password');
 
 function _tagdriver_activities() {
-  return array(
-    'activity_creation' => civicrm_api3('OptionValue', 'getvalue', array(
-      'option_group_id' => 'activity_type',
-      'name' => 'User Account Creation',
-      'return' => 'value',
-    )),
-    'activity_password' => civicrm_api3('OptionValue', 'getvalue', array(
-      'option_group_id' => 'activity_type',
-      'name' => 'User Account Password Reset',
-      'return' => 'value',
-    )),
-    'activity_failed' => civicrm_api3('OptionValue', 'getvalue', array(
-      'option_group_id' => 'activity_status',
-      'name' => 'Failed',
-      'return' => 'value',
-    )),
-    'activity_completed' => civicrm_api3('OptionValue', 'getvalue', array(
-      'option_group_id' => 'activity_status',
-      'name' => 'Completed',
-      'return' => 'value',
-    )),
-  );
+  static $activities;
+
+  if (!$activities) {
+    $activities = array(
+      'activity_creation' => civicrm_api3('OptionValue', 'getvalue', array(
+        'option_group_id' => 'activity_type',
+        'name' => 'User Account Creation',
+        'return' => 'value',
+      )),
+      'activity_password' => civicrm_api3('OptionValue', 'getvalue', array(
+        'option_group_id' => 'activity_type',
+        'name' => 'User Account Password Reset',
+        'return' => 'value',
+      )),
+      'activity_failed' => civicrm_api3('OptionValue', 'getvalue', array(
+        'option_group_id' => 'activity_status',
+        'name' => 'Failed',
+        'return' => 'value',
+      )),
+      'activity_completed' => civicrm_api3('OptionValue', 'getvalue', array(
+        'option_group_id' => 'activity_status',
+        'name' => 'Completed',
+        'return' => 'value',
+      )),
+    );
+  }
+  return $activities;
 }
 
 function _tagdriver_tags() {
-  return array(
-    'tagdriver_x' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => TAG_DRIVER_X,
-      'return' => 'id',
-    )),
-    'tagdriver_z' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => TAG_DRIVER_Z,
-      'return' => 'id',
-    )),
-    'tagdriver_y' => civicrm_api3('Tag', 'getvalue', array(
-      'name' => TAG_DRIVER_Y,
-      'return' => 'id',
-    )),
-  );
+  static $tags;
+
+  if (!$tags) {
+    $tags = array(
+      'tagdriver_x' => civicrm_api3('Tag', 'getvalue', array(
+        'name' => TAG_DRIVER_X,
+        'return' => 'id',
+      )),
+      'tagdriver_z' => civicrm_api3('Tag', 'getvalue', array(
+        'name' => TAG_DRIVER_Z,
+        'return' => 'id',
+      )),
+      'tagdriver_y' => civicrm_api3('Tag', 'getvalue', array(
+        'name' => TAG_DRIVER_Y,
+        'return' => 'id',
+      )),
+    );
+  }
+  return $tags;
 }
 
 /**
