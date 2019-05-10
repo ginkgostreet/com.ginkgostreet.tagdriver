@@ -54,3 +54,4 @@ function _civicrm_api3_user_create_spec(&$params) {
     'type' => CRM_Utils_Type::T_INT,
   );
 }
+
