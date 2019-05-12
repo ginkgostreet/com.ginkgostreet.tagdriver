@@ -33,9 +33,12 @@ class CRM_Tagdriver_Form_Settings extends CRM_Core_Form {
       ),
     ));
 
+    // use settings as defined in default domain
+    $settings = Civi::settings(1);
+
     $this->setDefaults(array(
-      'tagdriver_tb' => Civi::settings()->get('tagdriver_tb'),
-      'tagdriver_pattern' => Civi::settings()->get('tagdriver_pattern'),
+      'tagdriver_tb' => $settings->get('tagdriver_tb'),
+      'tagdriver_pattern' => $settings->get('tagdriver_pattern'),
     ));
 
     parent::buildQuickForm();
@@ -44,9 +47,12 @@ class CRM_Tagdriver_Form_Settings extends CRM_Core_Form {
   public function postProcess() {
     $values = $this->exportValues();
 
+    // use settings as defined in default domain
+    $settings = Civi::settings(1);
+
     foreach ($values as $k => $v) {
       if (strpos($k, 'tagdriver_') === 0) {
-        Civi::settings()->set($k, $v);
+        $settings->set($k, $v);
       }
     }
 

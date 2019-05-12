@@ -60,6 +60,35 @@ function _tagdriver_tags() {
 }
 
 /**
+ * implements hook_civicrm_post().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_post/
+ */
+function tagdriver_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+
+  if ($objectName == 'EntityTag' && ($op == 'create' || $op == 'delete')) {
+    $tags = _tagdriver_tags();
+
+    if ($objectId == $tags['tagdriver_x'] || $objectId == $tags['tagdriver_y']) {
+      $helper = CRM_Tagdriver_Helper::singleton();
+
+      foreach ($objectRef as $something) {
+        if (is_array($something)) {
+          foreach ($something as $contact_id) {
+            if ($op == 'create') {
+              $helper->addContact($contact_id, $objectId);
+            }
+            else {
+              $helper->removecontact($contact_id, $objectId);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * implements hook_civicrm_tokens().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tokens/
