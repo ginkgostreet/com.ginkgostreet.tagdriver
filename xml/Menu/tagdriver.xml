@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/tagdriver</path>
+    <page_callback>CRM_Tagdriver_Form_Settings</page_callback>
+    <title>Settings - Tag Driver</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
