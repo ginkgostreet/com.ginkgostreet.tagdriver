@@ -18,6 +18,14 @@ class CRM_Tagdriver_Helper {
     $contacts = Civi::settings()->get('tagdriver_contacts');
     $this->contacts = $contacts ? (array) json_decode($contacts) : array();
 
+    // <SUP-1860>
+    foreach ($this->contacts as $tag_id => &$contact_ids) {
+      if (!is_array($contact_ids)) {
+        $contact_ids = (array) $contact_ids;
+      }
+    }
+    // </SUP-1860>
+
     register_shutdown_function(array($this, 'shutdown'));
   }
 
